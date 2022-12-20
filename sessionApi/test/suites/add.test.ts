@@ -10,7 +10,6 @@ import { createSpot, sessionFactory, spotFactory } from "../fixtures/session.fix
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 chai.use(chaiHttp)
 const credentials = { email: "test@testOne.com", password: "test" };
-console.log(randomUUID())
 const postNewSession = async (newSessionData: Partial<SessionInterface>) => {
   const agent = chai.request.agent(server);
   const token = (await getAuthentificationToken(url, credentials)).token

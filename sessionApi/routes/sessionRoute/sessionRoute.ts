@@ -43,11 +43,14 @@ router.post(`/`, async function (req: Request, res: Response) {
   };
 });
 
-router.get(`/url`, function (req: Request, res: Response) {
+router.get(`/`, async function (req: Request, res: Response) {
+  const token = getToken(req)
+  const { userId } = (await sessionTokenAuthentification(token));
   try {
-
+    const sessions = await service.getAll(userId)
     res.status(200).json({
-
+      error: false,
+      sessions
     });
   } catch (error) {
     res.status(666).json({

@@ -4,9 +4,9 @@ import { WindObject } from "../generalInterface/windInterface";
 
 export interface SessionInterface {
     _id: Types.ObjectId
-    userId: String,
+    userId?: Types.ObjectId,
     date: Date,
-    spotId: String,
+    spotId?: Types.ObjectId,
     startTime: Date,
     endTime: Date,
     totalTime: Date,

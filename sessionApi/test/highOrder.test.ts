@@ -7,12 +7,13 @@ describe("Project set up test", () => {
     before(() => {
         createSpot(spotFactory({}))
     })
-    describe("SESSION API TEST SUITE",()=>{
-        require("./suites/add.test")
+    describe("SESSION API TEST SUITE", () => {
+        require("./suites/add.test");
+        require("./suites/getAll.test")
     })
     after(async () => {
         try {
-            //await mongoose.models.Image.deleteMany();
+            await mongoose.models.Session.deleteMany();
             await mongoose.models.Spot.deleteMany();
         } catch (error) {
             throw error
