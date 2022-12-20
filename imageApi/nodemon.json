@@ -1,0 +1,9 @@
+{
+    "ignore": [".git", "node_modules", "compiled"],
+    "watch": ["./"], 
+    "exec": "ts-node-esm   ./server.ts",
+    "ext": ".ts",
+    "execMap":{ 
+        "ts":"NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' ts-node -T"
+    }
+}
