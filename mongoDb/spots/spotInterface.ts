@@ -14,7 +14,7 @@ export interface SpotInterface {
   optimalConditions: {
     wind: {
       strength: string,
-      orientation: string,
+      orientation: string[],
     },
     swell: {
       size: string,

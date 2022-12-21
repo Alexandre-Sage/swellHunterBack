@@ -16,7 +16,7 @@ export class SessionService implements SessionServiceInterface {
   };
   create = async ({ userId, newData }: { userId: UserInterface["_id"], newData: SessionInterface }) => {
     try {
-      await this.repository.create({ userId, newData });
+      this.repository.create({ userId, newData });
     } catch (error) {
       throw new CustomError("Something wrong happened please retry", "createSession", 500)
     }
@@ -27,5 +27,8 @@ export class SessionService implements SessionServiceInterface {
     } catch (error) {
       throw new CustomError("Something wrong happened please retry", "getAllSession", 500)
     }
+  }
+  getById = async (userId: UserInterface["_id"], sessionId: SessionInterface["_id"]) => {
+    return this.repository.getById({ _id: sessionId, userId })
   }
 }

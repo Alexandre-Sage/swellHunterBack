@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import Joi from 'joi';
-import { SpotInterface } from '../../../mongoDb/spots/spotInterface';
+import { Types } from 'mongoose';
 import { CustomError } from '../../../sharedModules/errors/errorClass';
 import { getToken, sessionTokenAuthentification } from '../../../sharedModules/jwt/jwtManagement';
 import { service } from '../../server';
@@ -53,26 +53,32 @@ router.get(`/`, async function (req: Request, res: Response) {
       sessions
     });
   } catch (error) {
-    res.status(666).json({
-
+    res.status(400).json({
+      error: true,
+      message: "Something wrong happened please retry."
     });
   };
 });
 
-router.get(`/url/:id`, function (req: Request, res: Response) {
+router.get(`/:id`, async function (req: Request, res: Response) {
+  const { id: sessionId } = req.params
+  const token = getToken(req)
+  const { userId } = (await sessionTokenAuthentification(token));
   try {
-
+    const session = await service.getById(userId, sessionId as unknown as Types.ObjectId)
     res.status(200).json({
-
+      error: false,
+      session
     });
   } catch (error) {
-    res.status(666).json({
-
+    res.status(400).json({
+      error: true,
+      message: "Something wrong happened please retry."
     });
   };
 });
 
-router.put(`/url/:id`, function (req: Request, res: Response) {
+router.put(`/:id`, function (req: Request, res: Response) {
   const { } = req.body;
   try {
 

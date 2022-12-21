@@ -7,6 +7,7 @@ import { getUserId } from "../../../sharedModules/testModules/getUserId";
 import { getAuthentificationToken } from "../../../sharedModules/testModules/login";
 import { server } from "../../server";
 import { createSpot, fakeSessionToAdd, spotFactory } from "../fixtures/session.fixture";
+import { tearDown } from "../highOrder.test";
 
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 chai.use(chaiHttp)
@@ -21,12 +22,14 @@ const getAllSession = async () => {
 const contentType = 'application/json; charset=utf-8';
 
 
-export default describe.only('GET ALL SESSION', function () {
+export default describe('GET ALL SESSION', function () {
   before(async () => {
     await createSpot(spotFactory({}));
     const { userId } = await getUserId(credentials)
     const { _id: spotId } = await database.mongoose.models.Spot.findOne({ spotName: "port blanc" }, { _id: 1, spotName: 1 })
-    await Promise.all(fakeSessionToAdd(spotId, userId).map(async fakeSession => createSession(fakeSession)))
+    await Promise.all(
+      fakeSessionToAdd(spotId, userId).map(async fakeSession => createSession(fakeSession))
+    );
     // await createSession()
     this.ctx.agent = chai.request.agent(server);
     this.ctx.token = (await getAuthentificationToken(url, credentials)).token
@@ -50,4 +53,5 @@ export default describe.only('GET ALL SESSION', function () {
       throw error;
     };
   });
+  tearDown();
 });

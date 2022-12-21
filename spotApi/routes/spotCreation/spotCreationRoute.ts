@@ -4,6 +4,29 @@ import { SpotInterface } from "../../../mongoDb/spots/spotInterface";
 import { UserInterface } from "../../../mongoDb/user/userInterface";
 import { sessionTokenAuthentification, getToken } from "../../../sharedModules/jwt/jwtManagement";
 import { spotValidatior } from "./spotCreationFunction";
+import Joi, { string, object, array } from "joi";
+
+const spotValidationSchema: Joi.ObjectSchema<SpotInterface> = Joi.object({
+  spotName: string().required(),
+  country: string().required(),
+  location: object({
+    type: string(),
+    coordinates: array()
+  }),
+  optimalConditions: object({
+    wind: object({
+      strength: string().required(),
+      orientation: string().required(),
+    }),
+    swell: object({
+      size: string().required(),
+      period: string().required(),
+      orientation: string().required(),
+    })
+  }),
+  orientation: array().required()
+})
+
 const router = express.Router();
 //AJOUTER OBJECT BODY DANS LE FRONT
 type RequestType = Request<never, unknown, { newSpotData: SpotInterface }>;

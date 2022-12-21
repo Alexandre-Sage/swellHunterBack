@@ -7,6 +7,7 @@ import { getUserId } from "../../../sharedModules/testModules/getUserId";
 import { getAuthentificationToken } from "../../../sharedModules/testModules/login";
 import { server } from "../../server";
 import { createSpot, sessionFactory, spotFactory } from "../fixtures/session.fixture";
+import { tearDown } from "../highOrder.test";
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 chai.use(chaiHttp)
 const credentials = { email: "test@testOne.com", password: "test" };
@@ -124,5 +125,6 @@ describe('CREATE NEW SESSION', function () {
     } catch (error: any) {
       throw error;
     };
-  })
+  });
+  tearDown()
 });
