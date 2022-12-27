@@ -18,13 +18,16 @@ const spotFactory = (spot: Partial<SpotInterface>) => {
     orientation: orientation ?? ["W", "N/W", "WN/W"],
     optimalConditions: optimalConditions ?? {
       wind: {
-
+        orientation: "NE",
+        strength: "12kno"
       },
       swell: {
-
+        orientation: "SW",
+        period: "12s",
+        size: "2m"
       }
     },
-    creationDate: creationDate ?? new Date().toUTCString()
+    creationDate: creationDate //?? new Date().toUTCString()
   });
 };
 export { spotFactory }

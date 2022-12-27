@@ -6,14 +6,14 @@ import { User } from "../../../../mongoDb/user/users";
 import { getAuthentificationToken } from "../../../../sharedModules/testModules/login";
 import { Types } from "mongoose";
 
-
+import { spotFactory } from "../../fixtures/spot.fixtures";
 
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 
 chai.use(chaiHttp)
 export default describe("LOG IN AND ADD SPOT SUCESFULL", function () {
   before(async () => {
-    const newSpot = {
+    const newSpot = spotFactory({})/* {
       spotName: "port blanc",
       country: "France",
       type: {
@@ -34,7 +34,7 @@ export default describe("LOG IN AND ADD SPOT SUCESFULL", function () {
         }
       },
       creationDate: new Date().toUTCString()
-    };
+    }; */
     this.ctx.spot = newSpot;
   });
 
