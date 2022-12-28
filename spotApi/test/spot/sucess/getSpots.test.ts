@@ -17,7 +17,7 @@ export default describe("LOG IN AND GET ALL SPOT", function () {
     //const contentLength = '126';
     try {
       const token: any = await getAuthentificationToken(url, credentials)
-      const response = await agent.get(`/spot/getAllSpots`).set("Authorization", `Bearer ${token.token}`);
+      const response = await agent.get(`/spots`).send({ filter: { _id: 0, spotName: 1 } }).set("Authorization", `Bearer ${token.token}`);
       const { header, body, error } = response;
       console.log(body)
       expect(error).to.be.eql(false);

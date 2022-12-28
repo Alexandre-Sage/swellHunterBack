@@ -47,7 +47,7 @@ export default describe("LOG IN AND ADD SPOT SUCESFULL", function () {
     const contentLength = '50';
     try {
       const token: any = await getAuthentificationToken(url, credentials);
-      const response = await agent.post("/spot/newSpot").send({ newSpotData: this.ctx.spot }).set("Authorization", `Bearer ${token.token}`);
+      const response = await agent.post("/spots").send({ newSpotData: this.ctx.spot }).set("Authorization", `Bearer ${token.token}`);
       const { header, body, error } = response;
       expect(error).to.be.eql(false);
       expect(response).to.have.property("status").eql(200);
