@@ -1,27 +1,21 @@
 import express, { Request, Response } from 'express';
 import Joi from 'joi';
 import { Types } from 'mongoose';
+import { SessionInterface } from '../../../mongoDb/sessions/sessionInterface';
+import { SpotInterface } from '../../../mongoDb/spots/spotInterface';
 import { CustomError } from '../../../sharedModules/errors/errorClass';
 import { getToken, sessionTokenAuthentification } from '../../../sharedModules/jwt/jwtManagement';
 import { service } from '../../server';
 import { sessionBodyValidationSchema } from './validationSchema';
+import { Query, ParamsDictionary, Params } from 'express-serve-static-core';
+import { joiDataValidationHighOrder } from "../../../sharedModules/dataValidation/joiHighOrder"
+import { URLSearchParams } from 'url';
+import { Type } from 'typescript';
 const router = express.Router()
 
-
-
-const joiDataValidationHighOrder = async (dataToSanitize: any, joiValidationSchema: Joi.ObjectSchema<any>) => {
-  try {
-    await joiValidationSchema.validateAsync({ ...dataToSanitize })
-  } catch (error: any) {
-    let message: string = "";
-    switch (error.details[0].type.split(".")[1]) {
-      case "required":
-        const field = error.details[0].message.split(`"`)[1].split(/(?=[A-Z])/)[0]
-        message = `The field ${field} is empty`;
-        break;
-    }
-    throw new CustomError(message, "JoiValidationError", 500)
-  }
+export interface TypedRequest<T extends Query, U> extends Request {
+  body: U,
+  query: T
 }
 
 router.post(`/`, async function (req: Request, res: Response) {
@@ -65,7 +59,7 @@ router.get(`/:id`, async function (req: Request, res: Response) {
   const token = getToken(req)
   const { userId } = (await sessionTokenAuthentification(token));
   try {
-    const session = await service.getById(userId, sessionId as unknown as Types.ObjectId)
+    const session = await service.getById({ userId, sessionId: sessionId as unknown as Types.ObjectId })
     res.status(200).json({
       error: false,
       session
@@ -77,17 +71,22 @@ router.get(`/:id`, async function (req: Request, res: Response) {
     });
   };
 });
-
-router.put(`/:id`, function (req: Request, res: Response) {
-  const { } = req.body;
+type PutRequest = Request<{ id: string }, unknown, { sessionUpdatedData: SessionInterface }>;
+router.put(`/:id`, async function (req: PutRequest, res: Response) {
+  const { sessionUpdatedData } = req.body;
+  const { id } = req.params;
+  const token = getToken(req)
   try {
-
-    res.status(200).json({
-
+    const { userId } = (await sessionTokenAuthentification(token));
+    await service.update({ sessionId: id as unknown as Types.ObjectId, updatedData: sessionUpdatedData, userId })
+    res.status(201).json({
+      error: false,
+      message: "Session updated with sucess"
     });
   } catch (error) {
-    res.status(666).json({
-
+    res.status(500).json({
+      error: true,
+      message: "Something wrong happened please retry."
     });
   };
 });

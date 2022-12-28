@@ -1,4 +1,4 @@
-export interface WaveTypeObject{
-    waveType:String,
-    bottomType:String
+export interface WaveTypeObject {
+    waveType: string,
+    bottomType: string
 }

@@ -1,12 +1,12 @@
 import { Model, Schema } from "mongoose";
 import { SessionInterface } from "../sessions/sessionInterface";
-import { Repository, RepositoryInterface } from "./repositoryClass";
+import { Repository, RepositoryInterface, RepositoryModel } from "./repositoryClass";
 
-export interface SessionRepositoryInterface extends RepositoryInterface {
+export interface SessionRepositoryInterface extends RepositoryInterface<SessionInterface> {
 }
 
-export class SessionRepository extends Repository implements SessionRepositoryInterface {
-  constructor(readonly model: Model<SessionInterface, {}, {}, {}, Schema<SessionInterface>>) {
+export class SessionRepository extends Repository<SessionInterface> implements SessionRepositoryInterface {
+  constructor(readonly model: RepositoryModel<SessionInterface>) {
     super(model)
     this.model = model;
   };

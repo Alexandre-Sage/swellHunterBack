@@ -6,6 +6,8 @@ import { CustomError } from "../../sharedModules/errors/errorClass";
 interface SessionServiceInterface {
   create: ({ userId, newData }: { userId: UserInterface["_id"], newData: SessionInterface }) => Promise<void>
   getAll: (userId: UserInterface["_id"]) => Promise<SessionInterface[]>
+  getById: ({ }: { userId: UserInterface["_id"], sessionId: SessionInterface["_id"] }) => Promise<void>
+  update: ({ userId, updatedData }: { userId: UserInterface["_id"], updatedData: SessionInterface, sessionId: SessionInterface["_id"] }) => Promise<void>
 }
 
 export class SessionService implements SessionServiceInterface {
@@ -28,7 +30,10 @@ export class SessionService implements SessionServiceInterface {
       throw new CustomError("Something wrong happened please retry", "getAllSession", 500)
     }
   }
-  getById = async (userId: UserInterface["_id"], sessionId: SessionInterface["_id"]) => {
+  getById = async ({ sessionId, userId }: { userId: UserInterface["_id"], sessionId: SessionInterface["_id"] }) => {
     return this.repository.getById({ _id: sessionId, userId })
+  }
+  update = async ({ updatedData, userId, sessionId }: { userId: UserInterface["_id"], updatedData: SessionInterface, sessionId: SessionInterface["_id"] }) => {
+    return this.repository.update({ _id: sessionId, userId, dataToUpdate: updatedData });
   }
 }

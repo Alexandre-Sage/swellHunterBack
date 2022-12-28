@@ -2,7 +2,7 @@ import { Model, Schema } from "mongoose";
 import { ImageInterface, Images } from "../images/image";
 import { SpotInterface } from "../spots/spotInterface";
 import { UserInterface } from "../user/userInterface";
-import { Repository, RepositoryInterface } from "./repositoryClass";
+import { Repository, RepositoryInterface, RepositoryModel } from "./repositoryClass";
 
 interface RepositoryParams {
   userId: UserInterface["_id"];
@@ -10,13 +10,13 @@ interface RepositoryParams {
   spotId?: SpotInterface["_id"]
 }
 
-export interface ImageRepositoryInterface extends RepositoryInterface {
+export interface ImageRepositoryInterface extends RepositoryInterface<ImageInterface> {
   addSpotImage: ({ }: RepositoryParams) => Promise<void>
   getSpotImagesBySpotId: (spotId: SpotInterface["_id"]) => Promise<ImageInterface[]>
 }
 
-export class ImageRepository extends Repository implements ImageRepositoryInterface {
-  constructor(readonly model: Model<ImageInterface, {}, {}, {}, Schema<ImageInterface>>) {
+export class ImageRepository extends Repository<ImageInterface> implements ImageRepositoryInterface {
+  constructor(readonly model: RepositoryModel<ImageInterface>) {
     super(model)
     this.model = model;
   }

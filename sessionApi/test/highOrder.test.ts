@@ -15,7 +15,8 @@ describe("Project set up test", () => {
     describe("SESSION API TEST SUITE", () => {
         require("./suites/add.test");
         require("./suites/getAll.test");
-        require("./suites/getOne.test")
+        require("./suites/getOne.test");
+        require("./suites/update.test")
     })
     tearDown()
 });

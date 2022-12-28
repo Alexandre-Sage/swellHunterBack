@@ -9,6 +9,7 @@ import { getAuthentificationToken } from "../../../sharedModules/testModules/log
 import { server } from "../../server";
 import { createSpot, fakeSessionToAdd, sessionFactory, spotFactory } from "../fixtures/session.fixture";
 import { tearDown } from "../highOrder.test";
+import { getOneSession } from "./getOne.test";
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 chai.use(chaiHttp)
 const credentials = { email: "test@testOne.com", password: "test" };
@@ -17,11 +18,13 @@ const updateSession = async (sessionId: SessionInterface["_id"], update: Session
   const token = (await getAuthentificationToken(url, credentials)).token
   return await agent.put(`/sessionApi/sessions/${sessionId}`)
     .set("Authorization", `Bearer ${token}`)
-    .send();
+    .send({
+      sessionUpdatedData: { ...update }
+    });
 }
 const contentType = 'application/json; charset=utf-8';
 
-describe('CREATE NEW SESSION', function () {
+describe.only('UPDATE SESSION', function () {
   /* before(async () => {
     await createSpot(spotFactory({}));
     const { _id } = await database.mongoose.models.Spot.findOne({ spotName: "port blanc" }, { _id: 1, spotName: 1 })
@@ -44,12 +47,12 @@ describe('CREATE NEW SESSION', function () {
     this.ctx.sessionId = sessionId
     this.ctx.sessionData = session._doc
   });
-  it("Should log in and post a new session to data base with sucess", async () => {
+  it("Should log in and update a session to data base with sucess", async () => {
     const { token, agent, spotId, sessionId } = this.ctx
     const responseMessage = "Session updated with sucess";
-    const contentLength = '59';
+    const contentLength = '55';
     try {
-      const session = sessionFactory({ spotId })
+      const session = { ...sessionFactory({ spotId }), spotName: "port rhu" }
       const { header, body, error, status } = await updateSession(sessionId, session as any);
       expect(error).to.be.eql(false);
       expect(status).to.be.eql(201);
@@ -57,6 +60,9 @@ describe('CREATE NEW SESSION', function () {
       expect(header).to.have.property('content-type').eql(contentType);
       expect(header).to.have.property('content-length').eql(contentLength);
       expect(header).to.have.property('access-control-allow-credentials').eql("true");
+      const { body: updatedSession } = await getOneSession(sessionId)
+      console.log({ debug: updatedSession, session });
+      expect(updatedSession).to.be.eql(session)
     } catch (error: any) {
       console.log({ error })
       throw error;

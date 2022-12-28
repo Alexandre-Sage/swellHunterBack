@@ -14,7 +14,7 @@ const url = `https://development.alexandre-sage-dev.fr/auth/logIn`
 chai.use(chaiHttp)
 const credentials = { email: "test@testOne.com", password: "test" };
 
-const getOneSession = async (sessionId: SessionInterface["_id"]) => {
+export const getOneSession = async (sessionId: SessionInterface["_id"]) => {
   const agent = chai.request.agent(server);
   const token = (await getAuthentificationToken(url, credentials)).token
   return await agent.get(`/sessionApi/sessions/${sessionId}`)

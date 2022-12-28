@@ -6,21 +6,16 @@ import express from "express";
 import http from "http";
 import logger from "morgan";
 //ROUTES 
-import { Router } from "./routes/spotCreation/spotCreationRoute";
 import { CorsOptions } from "cors";
 import "dotenv/config";
 import { Express } from "express";
 import { Server } from "http";
+import { Router } from "./routes/router";
 //ROUTES 
 import { SpotRepository } from "../mongoDb/repository/spotRepository";
 import { database } from "../mongoDb/server/database";
-import getAllSpot from "./routes/getAllSpot/getAllSpotRoute";
-import getOneSpot from "./routes/getOneSpot/getOneSpotRoute";
-import addSpotRoute from "./routes/spotCreation/spotCreationRoute";
 import { SpotService } from "./service/spotService";
-import { Repository, RepositoryInterface } from "../mongoDb/repository/repositoryClass";
-import { ClassDeclaration, TokenClass } from "typescript";
-interface SurfAppServerInterface<T, U> {
+/* interface SurfAppServerInterface<T, U> {
   readonly server: Express,
   readonly repository: U,
   readonly service: T;
@@ -42,7 +37,7 @@ export class SurfAppServer<T, U> implements SurfAppServerInterface<T, U> {
     this.httpServer = {} as Server;
     this.corsOptions = corsOptions;
   };
-}
+} */
 export class ImageServer {
   public readonly repository: SpotRepository
   public readonly server: Express;
@@ -74,10 +69,7 @@ export class ImageServer {
   createServer = () => {
     this.init()
     const router = new Router(this.service, "/spot").initRoutes()
-    this.server.use("/spot/newSpot", router)
-    // this.server.use("/spot/newSpot", addSpotRoute);
-    this.server.use("/spot/getSpot", getOneSpot);
-    this.server.use("/spot/getAllSpots", getAllSpot);
+    this.server.use("/spots", router)
     this.httpServer = http.createServer(this.server);
     return {
       server: this.server, httpServer: this.httpServer, repository: this.repository, services: { service: this.service }

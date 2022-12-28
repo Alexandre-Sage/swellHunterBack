@@ -5,12 +5,14 @@ import { createSpot } from '../../../sharedModules/testModules/createSpot';
 import { SessionInterface } from "../../../mongoDb/sessions/sessionInterface";
 import { randomUUID } from "crypto";
 import { createSession } from "../../../sharedModules/testModules/createSession"
+import { GeoJsonObject } from "../../../mongoDb/generalInterface/geoJsonInterface";
 const sessionId = [randomUUID(), randomUUID(), randomUUID()]
 
-const sessionFactory = ({ spotId, userId, endTime, startTime, date, swell, wind, comment, _id }: Partial<SessionInterface>) => ({
+const sessionFactory = ({ spotId, userId, endTime, startTime, date, swell, wind, comment, _id, spotName, location }: Partial<SessionInterface>) => ({
   userId,
   date: date ?? new Date(),
   spotId,
+  spotName: spotName ?? "Port blanc",
   startTime: startTime ?? new Date(),
   endTime: endTime ?? new Date(),
   swell: swell ?? {
@@ -18,11 +20,16 @@ const sessionFactory = ({ spotId, userId, endTime, startTime, date, swell, wind,
     period: "12s",
     orientation: "NO"
   },
+
   wind: wind ?? {
     strength: "12knot",
     orientation: "E"
   },
-  comment: comment ?? "Something to say about"
+  comment: comment ?? "Something to say about",
+  location: location ?? {
+    type: "Point",
+    coordinates: ["47", "-3"]
+  },
 });
 
 const fakeSessionToAdd = (spotId: SpotInterface["_id"], userId: any) => {

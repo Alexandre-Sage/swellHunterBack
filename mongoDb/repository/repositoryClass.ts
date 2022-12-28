@@ -1,35 +1,43 @@
 import { ObjectId } from "mongodb";
-import { Document, Model, Schema, Types } from "mongoose";
+import { Document, HydratedDocument, Model, Schema, Types } from "mongoose";
+import { SpotInterface } from "../spots/spotInterface";
 import { UserInterface } from "../user/userInterface";
 
-export interface RepositoryInterface {
-  create: ({ }: { userId: UserInterface["_id"], newData: unknown }) => Promise<void>;
-  getAll: ({ }: { userId: UserInterface["_id"], filter?: any }) => Promise<Document[]>;
-  getById: ({ }: { _id: _Id, userId: UserInterface["_id"], filter?: any }) => Promise<Document | null>;
-  update: ({ }: { _id: _Id, userId: UserInterface["_id"], dataToUpdate: any }) => Promise<void>;
+
+export interface RepositoryInterface<T> {
+  create: ({ }: { userId: UserInterface["_id"], newData: T }) => Promise<void>;
+  getAll: ({ }: { userId: UserInterface["_id"], filter?: FilterType<T> }) => Promise<HydratedDocument<T, {}, {}>[]>;
+  getById: ({ }: { _id: _Id, userId: UserInterface["_id"], filter?: FilterType<T> }) => Promise<HydratedDocument<T, {}, {}> | null>;
+  update: ({ }: { _id: _Id, userId: UserInterface["_id"], dataToUpdate: T }) => Promise<void>;
   // filter: (filter: any) => Object | undefined
 }
 
-type _Id = Types.ObjectId
-type RepositoryModel = Model<any, {}, {}, {}, Schema<any>>
-export class Repository implements RepositoryInterface {
-  constructor(readonly model: RepositoryModel) {
+export type InterfaceToFilterTypeMapper<T> = {
+  [Property in keyof T]: number
+}
+export type FilterType<T> = Partial<InterfaceToFilterTypeMapper<T>>
+
+export type _Id = Types.ObjectId
+export type RepositoryModel<T> = Model<T, {}, {}, {}, Schema<T>>
+export type MongoDocument<T> = Document<unknown, any, T>
+export class Repository<T> implements RepositoryInterface<T> {
+  constructor(readonly model: RepositoryModel<T>) {
     this.model = model;
   };
-  create = async ({ userId, newData }: { userId: UserInterface["_id"]; newData: any; }) => {
+  create = async ({ userId, newData }: { userId: UserInterface["_id"]; newData: T; }) => {
     const newDocument = new this.model({
       ...newData,
       userId
     });
     this.model.create(newDocument);
   };
-  getAll = async ({ userId, filter }: { userId: UserInterface["_id"], filter?: any }) => {
-    return this.model.find({ userId }, { ...filter });
+  getAll = async ({ userId, filter }: { userId: UserInterface["_id"], filter?: FilterType<T> }) => {
+    return await this.model.find({ userId }, { ...filter });
   };
-  getById = async ({ _id, userId, filter }: { _id: _Id, userId: UserInterface["_id"], filter?: any }) => {
+  getById = async ({ _id, userId, filter }: { _id: _Id, userId: UserInterface["_id"], filter?: FilterType<T> }) => {
     return this.model.findOne({ _id: new ObjectId(_id), userId }, { ...filter });
   };
-  update = async ({ _id, dataToUpdate, userId }: { _id: _Id, userId: UserInterface["_id"], dataToUpdate: any }) => {
+  update = async ({ _id, dataToUpdate, userId }: { _id: _Id, userId: UserInterface["_id"], dataToUpdate: T }) => {
     this.model.findOneAndUpdate({ _id: new ObjectId(_id), userId }, {
       ...dataToUpdate,
       userId
