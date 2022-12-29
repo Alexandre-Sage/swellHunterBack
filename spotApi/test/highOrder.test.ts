@@ -1,6 +1,4 @@
 import "mocha";
-import mongoose from "mongoose";
-import { SpotSchema } from "../../mongoDb/spots/spot";
 import { database } from "../../mongoDb/server/database";
 describe("################################## SPOT API TEST SUITE ##################################", () => {
   after(async () => {

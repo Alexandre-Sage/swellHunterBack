@@ -7,7 +7,7 @@ export const createSpot = async (spot: any) => {
   try {
     const credentials = { email: "test@testOne.com", password: "test" };
     const { userId } = await getUserId(credentials)
-    await mongoose.models.Spot.create({ ...spot, userId })
+    await mongoose.models.Spot.create({ ...spot, userId, creationDate: new Date() })
   } catch (error) {
     throw error
   }

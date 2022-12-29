@@ -1,4 +1,4 @@
-import { MongoFilterType, MongoDocument } from "../../mongoDb/repository/repositoryClass";
+import { MongoDocument, MongoFilterType } from "../../mongoDb/repository/repositoryClass";
 import { SpotRepository } from "../../mongoDb/repository/spotRepository";
 import { SpotInterface } from "../../mongoDb/spots/spotInterface";
 import { UserInterface } from "../../mongoDb/user/userInterface";

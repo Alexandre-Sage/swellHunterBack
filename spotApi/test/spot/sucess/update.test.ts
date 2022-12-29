@@ -1,14 +1,10 @@
-import server from "../../../server";
-import chai, { assert, should, expect } from "chai";
-import chaiHttp from "chai-http"
-import { Suite, SuiteFunction } from "mocha";
-import { User } from "../../../../mongoDb/user/users";
-import { getAuthentificationToken } from "../../../../sharedModules/testModules/login";
-import { Types } from "mongoose";
+import chai, { expect } from "chai";
+import chaiHttp from "chai-http";
 import { database } from "../../../../mongoDb/server/database";
-import { spotFactory } from "../../fixtures/spot.fixtures";
-import { randomUUID } from "crypto";
 import { getUserId } from "../../../../sharedModules/testModules/getUserId";
+import { getAuthentificationToken } from "../../../../sharedModules/testModules/login";
+import server from "../../../server";
+import { spotFactory } from "../../fixtures/spot.fixtures";
 
 const credentials = { email: "test@testOne.com", password: "test" };
 const url = `https://development.alexandre-sage-dev.fr/auth/logIn`

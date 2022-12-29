@@ -21,7 +21,6 @@ export default describe("LOG IN AND  UPLOAD AN IMAGE RELATED TO SPOT", function 
     const { mongoose } = database
     const token: any = await getAuthentificationToken(url, credentials)
     const { _id } = await mongoose.models.Spot.findOne({ spotName: "port blanc" }, { _id: 1, spotName: 1 })
-    console.log(_id)
     this.ctx.spotId = _id
   })
   it("Should log in and post a new spot image", async () => {

@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
     const { spotId } = req.params;
     const filter = { _id: 1, spotName: 1 };
     const { userName, userId } = (await sessionTokenAuthentification(getToken(req)));
-    const { spotName } = await database.spotRepository.getById({ _id: spotId as unknown as SpotInterface["_id"], userId, filter })
+    const spotName = (await database.spotRepository.getById({ _id: spotId as unknown as SpotInterface["_id"], userId, filter }))?.spotName
     const folder: string = `./src/images/spotImages/${userName}`;
     //AREMPLACER PAR fs.stat
     fs.exists(folder, async (existing: boolean) => {

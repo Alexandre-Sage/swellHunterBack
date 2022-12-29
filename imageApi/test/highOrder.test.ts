@@ -6,7 +6,7 @@ import { credentials, getUserId, spotFactory } from "./fixtures/image.fixtures";
 describe("IMAGE API", () => {
     const { mongoose } = database
     before(async () => {
-        createSpot(spotFactory({}))
+        await createSpot(spotFactory({ spotName: "port blanc" }))
     })
     describe("I) IMAGE UPLOAD", () => {
         require("./userImageUpload/sucess")

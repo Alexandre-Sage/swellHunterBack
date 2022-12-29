@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { SpotInterface } from "../../../mongoDb/spots/spotInterface";
 
 const spotFactory = (spot: Partial<SpotInterface>) => {
@@ -30,4 +29,4 @@ const spotFactory = (spot: Partial<SpotInterface>) => {
     creationDate: creationDate //?? new Date().toUTCString()
   });
 };
-export { spotFactory }
+export { spotFactory };
