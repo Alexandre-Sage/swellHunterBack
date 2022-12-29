@@ -73,16 +73,22 @@ export class Router {
         });
       };
     });
-    router.put(`/:spotId`, function (req: Request, res: Response) {
-      const { } = req.body;
+    router.put(`/:spotId`, async function (req: Request, res: Response) {
+      const token = getToken(req);
+      const { spotId: _id } = req.params;
+      const { newSpotData } = req.body;
       try {
-
+        const userId = (await sessionTokenAuthentification(token)).userId
+        await joiDataValidationHighOrder(newSpotData, spotValidationSchema)
+        await service.update({ _id: _id as unknown as SpotInterface["_id"], newData: newSpotData, userId })
         res.status(200).json({
-
+          error: false,
+          message: "Spot updated with sucess"
         });
-      } catch (error) {
-        res.status(666).json({
-
+      } catch (error: any) {
+        res.status(error.httpStatus ?? 500).json({
+          error: true,
+          message: error.message ?? "Something wrong happened please retry"
         });
       };
     });

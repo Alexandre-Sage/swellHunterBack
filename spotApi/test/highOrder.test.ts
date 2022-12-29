@@ -14,5 +14,6 @@ describe("################################## SPOT API TEST SUITE ###############
     require("./spot/sucess/addSpotSucess.test")
     require("./spot/sucess/getOneSpot.test")
     require("./spot/sucess/getSpots.test")
+    require("./spot/sucess/update.test")
   });
 });
